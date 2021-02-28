@@ -1,5 +1,6 @@
 const defaultSettings = {
-	chunkSize: 52428800 //50mb
+	chunkSize: 52428800, //50mb
+	debug: false
 }
 
 class VS {
@@ -30,12 +31,67 @@ class VS {
 
 		this.conf = settings
 
+		this.onprogress = null
+
 		this.c = {
 			total:null,
 			loaded:0,
 			segments:null,
-			totalSegments:null
+			totalSegments:null,
+			isFirst:true
 		}
+	}
+
+	/**
+	 * @description FOR INTERNAL USE!
+	 * @param {String} name 
+	 * @param {*} data 
+	 */
+	_save(name,data,callback) {
+		let transaction = this.db.transaction(["Video-Storage"],"readwrite")
+		transaction.objectStore("Video-Storage").put(data,name)
+		transaction.oncomplete = callback ? callback : null
+	}
+
+	/**
+	 * @description deletes all data - be carefull!
+	 */
+	deleteAll(callback) {
+		this.db.close()
+		const reqq = window.indexedDB.deleteDatabase("Video-Storage")
+
+		if(callback) {
+			reqq.onsuccess = callback
+			reqq.onerror = callback
+			reqq.onblocked = callback
+		}
+	}
+
+	_doReq(url,callback) {
+		const xhr = new XMLHttpRequest;
+		xhr.responseType = "blob"
+		xhr.open("GET", url, true)
+		xhr.setRequestHeader("Range",`bytes=${this.c.loaded}-${this.c.loaded+this.conf.chunkSize}`)
+		
+		xhr.onreadystatechange = () => {
+			if(xhr.readyState != 4) return
+		}
+
+		xhr.onload = (event) => {
+			this.c.loaded += this.conf.chunkSize
+			if(this.c.isFirst) {
+				this.c.total = Number(xhr.getResponseHeader("Content-Range").split("/")[1])
+				console.log(this.c.total)
+				this.c.isFirst = false
+			}
+
+			if(this.onprogress) this.onprogress()
+			if(this.conf.debug) console.log(`% loaded ${(t.c.loaded / t.c.total * 100).toFixed(2)}`)
+			
+			if(this.c.loaded < this.c.total) this._doReq(url)
+		}
+
+		xhr.send(null)
 	}
 
 	/**
@@ -44,15 +100,12 @@ class VS {
 	 * @param {String} path the path of the origin file
 	 */
 	save(name,path) {
-		const xhr = new XMLHttpRequest;
-		xhr.onreadystatechange = () => {
-			if(xhr.readyState != 4) return
-			alert(xhr.status)
-		}
+		let ongoing = true
+		let failsafe = 0;
 
-		xhr.open("GET", path, true)
-		xhr.setRequestHeader("Range",`bytes=${this.c.loaded}-${this.c.loaded+this.conf.chunkSize}`)
-		xhr.send(null)
+		this._doReq(path)
 	}
 
 }
+
+VS.getDefaultConfig = () => { return Object.assign({}, defaultSettings) }

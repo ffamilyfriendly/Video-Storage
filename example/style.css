@@ -15,3 +15,25 @@
 	font-weight: bold;
 	cursor: pointer;
 }
+
+#progOuter {
+	width: 100%;
+	min-height: 1em;
+	position: fixed;
+	z-index: 2;
+	bottom: 0;
+	left: 0;
+	background-color: grey;
+}
+
+#progInner {
+	color: white;
+	background-color: green;
+	padding: 0.25em;
+	width: 0;
+	overflow: hidden;
+}
+
+#percent {
+	display: inline;
+}
