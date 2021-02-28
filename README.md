@@ -12,6 +12,17 @@ Video-Storage aims to allow storage of big files in indexedDB without issues on 
 
 ## how to import
 
+### Preferably 
+download the file to your project then import it via
+```html 
+<script src="/your/path/Video-Storage.js">
+```
+### Or if you are lazy
+import it as such
+```html
+<script src="https://familyfriendly.xyz/lib/Video-Storage.js">
+```
+
 ## example
 ```js
 // get default config object
