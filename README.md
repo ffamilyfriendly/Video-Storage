@@ -5,7 +5,7 @@ Video-Storage aims to allow storage of big files in indexedDB without issues on 
 | Browser      | Compatibility | Notes                             |
 |--------------|---------------|-----------------------------------|
 | Chrome (PC)  | ✅             | Manjaro, 89.0.4385.0 dev (64-bit) |
-| Firefox (PC) | ✅             | Manjaro, 84.0.2 (64-bit)          |
+| Firefox (PC) | ✅*             | Manjaro, 84.0.2 (64-bit) - blob url is unseekable in player          |
 | Safari (IOS) | ❌             | working on fixing this            |
 
 *A browser missing from compat list? Make a pull request!*

@@ -1,3 +1,4 @@
+let vid = document.createElement("video")
 const conf = VS.getDefaultConfig()
 conf.debug = true
 conf.onready = () => {
@@ -25,17 +26,28 @@ const doDownload = () => {
 	t.save("test","/movie")
 }
 
-const watch = async () => {
-	const vid = document.createElement("video")
-	vid.setAttribute("controls","controls")
+setInterval(() => {
+	console.log(`${vid.buffered.length}`)
+}, 1000)
 
-	const vv = await getUrlThing()
-	vid.innerHTML = `<source src="${vv}">`
+const watch = async () => {
+	vid.setAttribute("controls","")
+	vid.setAttribute("autoplay","")
+	vid.src = URL.createObjectURL(await getBlobs())
 	document.querySelector("body").prepend(vid)
+
+	const btn = document.getElementById("buttonThing")
+	btn.innerText = "remove file"
+	btn.classList = "remove-btn"
+	btn.onclick = removeFile
 }
 
-const getUrlThing = async () => {
+const removeFile = () => {
+
+}
+
+const getBlobs = async () => {
 	const item = await t.get("test");
-	const funUrl = await item.getUrl()
+	const funUrl = await item.getBlobs()
 	return funUrl
 }

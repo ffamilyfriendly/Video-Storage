@@ -118,22 +118,35 @@ class VS {
 					chunkSize: result.chunkSize,
 					total: result.total,
 					segments: result.totalSegments,
-					getUrl: () => {
+					getBlobs: () => {
 						return new Promise((resolve,reject) => {
 							let blobArray = []
 							for(let i = 0; i < result.totalSegments; i++) {
 								tra.objectStore("Video-Storage").get(`blob_${name}_${i}`).onsuccess = (e) => {
 									blobArray[i] = e.target.result
 									if(i+1 === result.totalSegments) {
-										const mediaUrl = URL.createObjectURL(new Blob(blobArray))
-										resolve(mediaUrl)
+										resolve(new Blob(blobArray,{ type:e.target.result.type }))
 									}
 								}
 							}
 						})
 					},
+					getBlob: (n) => {
+						return new Promise((resolve,reject) => {
+							if(n > result.totalSegments) reject(`${n} > ${result.totalSegments}.`)
+							else {
+								tra.objectStore("Video-Storage").get(`blob_${name}_${n}`).onsuccess = (e) => {
+									resolve(e.target.result)
+								}
+							}
+						})
+					},
+					getUrl: async () => {
+						const blobs = await getBlobs()
+						return URL.createObjectURL(blobs)
+					},
 					delete: () => {
-						
+						throw new Error("not implemented")
 					}
 				} )
 			}
