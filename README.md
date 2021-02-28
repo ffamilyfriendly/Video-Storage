@@ -45,4 +45,4 @@ FileManager.get("Video-name")
 
 ## Issues
 ### Firefox-playback
-	firefox playback with blob url makes media unavilible to skipping through and uses a lot of the buffer. Taking the blob url (blob:host) and putting it in adressbar directly makes it act as intended
+firefox playback with blob url makes media unavilible to skipping through and uses a lot of the buffer. Taking the blob url (blob:host) and putting it in adressbar directly makes it act as intended
