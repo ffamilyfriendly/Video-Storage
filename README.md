@@ -1,0 +1,2 @@
+# Video-Storage
+Video-Storage aims to allow storage of big files in indexedDB without issues on IOS devices. I am developing this due to said crashes happening for my streaming website, [Armadillo](https://github.com/ffamilyfriendly/armadillo/).

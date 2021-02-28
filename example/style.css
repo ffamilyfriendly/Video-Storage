@@ -1,0 +1,17 @@
+#b {
+	width: 100%;
+	height: 100vh;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#inner button {
+	border: 2px solid green;
+	padding: 2em;
+	background-color: rgba(7, 207, 7, 0.699);
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+}
