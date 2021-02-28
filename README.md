@@ -5,7 +5,7 @@ Video-Storage aims to allow storage of big files in indexedDB without issues on 
 | Browser      | Compatibility | Notes                             |
 |--------------|---------------|-----------------------------------|
 | Chrome (PC)  | ✅             | Manjaro, 89.0.4385.0 dev (64-bit) |
-| Firefox (PC) | [✅*](#Firefox-playback)             | Manjaro, 84.0.2 (64-bit) - blob url is unseekable in player          |
+| Firefox (PC) | [❌*](#Firefox-playback)             | Manjaro, 84.0.2 (64-bit) - faulty          |
 | Safari (IOS) | ❌             | working on fixing this            |
 
 *A browser missing from compat list? Make a pull request!*
@@ -45,4 +45,4 @@ FileManager.get("Video-name")
 
 ## Issues
 ### Firefox-playback
-firefox does not allow user to seek anywhere in video/audio but rather skips back to previous position and buffers a few extra minutes. Taking the source url (blob://url) and placing in adress bar allows normal playback. Buffer usage remains low in both cases
+After some debugging ~~with some I mean like 7 hours~~ I've got it through my thick skull that the issued lie with my code not firefox
