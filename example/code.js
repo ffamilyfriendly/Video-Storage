@@ -1,6 +1,7 @@
 let vid = document.createElement("video")
 const conf = VS.getDefaultConfig()
 conf.debug = true
+conf.chunkSize = 10485760
 conf.onready = () => {
 	t.get("test")
 	.then(() => {
@@ -24,10 +25,6 @@ const doDownload = () => {
 	t.save("test","/movie")
 }
 
-setInterval(() => {
-	console.log(`${vid.buffered.length}`)
-}, 1000)
-
 const watch = async () => {
 	vid.setAttribute("controls","true")
 	vid.setAttribute("preload","")
@@ -40,8 +37,17 @@ const watch = async () => {
 	btn.onclick = removeFile
 }
 
-const removeFile = () => {
+vid.onprogress = (e) => {
+	console.log(e)
+}
 
+const TEST = () => {
+	console.log(vid.duration)
+	vid.currentSrc = vid.duration/2
+}
+
+const removeFile = () => {
+	t.delete("test")
 }
 
 const getObjectUrl = async () => {

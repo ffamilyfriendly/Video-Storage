@@ -78,19 +78,32 @@ class VS {
 		const xhr = new XMLHttpRequest;
 		xhr.responseType = "blob"
 		xhr.open("GET", url, true)
-		xhr.setRequestHeader("Range",`bytes=${this.c.loaded}-${this.c.loaded+this.conf.chunkSize}`)
+		let logObj = {
+			getting:`getting bytes=${this.c.loaded}-${this.c.loaded+this.conf.chunkSize}`
+		}
+
+		if(!this.c.isFirst && this.c.total < this.c.loaded + this.conf.chunkSize) {
+			if(this.conf.debug) console.log("TOO BIG")
+			xhr.setRequestHeader("Range",`bytes=${this.c.loaded}-${this.c.total}`)
+			logObj.getting = `getting bytes=${this.c.loaded}-${this.c.loaded+this.c.total}`
+		} else xhr.setRequestHeader("Range",`bytes=${this.c.loaded}-${this.c.loaded+this.conf.chunkSize}`)
+		
 		
 		xhr.onreadystatechange = () => {
 			if(xhr.readyState != 4) return
 		}
 
 		xhr.onload = () => {
-			this.c.loaded += this.conf.chunkSize
+			logObj.got = xhr.getResponseHeader("Content-Range")
 			if(this.c.isFirst) {
 				this.c.total = Number(xhr.getResponseHeader("Content-Range").split("/")[1])
 				this.c.totalSegments = Math.ceil(this.c.total / this.conf.chunkSize)
 				this.c.isFirst = false
 			}
+
+			this.c.loaded += xhr.response.size
+
+			if(this.conf.debug) console.log(logObj)
 
 			if(this.onprogress) this.onprogress()
 			if(this.conf.debug) console.log(`% loaded ${(t.c.loaded / t.c.total * 100).toFixed(2)}`)
@@ -145,9 +158,6 @@ class VS {
 						getUrl: async () => {
 							const blobs = await returnObj.getBlobs()
 							return URL.createObjectURL(blobs)
-						},
-						delete: () => {
-							throw new Error("not implemented")
 						}
 					}
 					resolve( returnObj )
@@ -170,6 +180,29 @@ class VS {
 				console.log(e)
 			})
 			this.c = Object.assign({}, cobj)
+		})
+	}
+
+	/**
+	 * @description INTERNAL FUNCTION
+	 * @param {String} name 
+	 */
+	_delete(name) {
+		let tra = this.db.transaction(["Video-Storage"],"readwrite")
+		tra.objectStore("Video-Storage").delete(name)
+	}
+
+	/**
+	 * @description removes all associated records of file
+	 * @param {String} name name of file to remove
+	 */
+	delete(name) {
+		this.get(name)
+		.then(v => {
+			for(let i = 0; i < v.segments; i++) {
+				this._delete(`blob_${name}_${i}`)
+			}
+			this._delete(`meta_${name}`)
 		})
 	}
 
