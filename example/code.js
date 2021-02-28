@@ -14,8 +14,6 @@ conf.onready = () => {
 }
 const t = new VS(conf)
 
-
-
 t.onprogress = () => {
 	const prog = Math.floor(t.c.loaded / t.c.total * 100)
 	document.getElementById("percent").innerText = prog
@@ -31,9 +29,9 @@ setInterval(() => {
 }, 1000)
 
 const watch = async () => {
-	vid.setAttribute("controls","")
-	vid.setAttribute("autoplay","")
-	vid.src = URL.createObjectURL(await getBlobs())
+	vid.setAttribute("controls","true")
+	vid.setAttribute("preload","")
+	vid.src = await getObjectUrl()
 	document.querySelector("body").prepend(vid)
 
 	const btn = document.getElementById("buttonThing")
@@ -46,8 +44,7 @@ const removeFile = () => {
 
 }
 
-const getBlobs = async () => {
+const getObjectUrl = async () => {
 	const item = await t.get("test");
-	const funUrl = await item.getBlobs()
-	return funUrl
+	return await item.getUrl();
 }
