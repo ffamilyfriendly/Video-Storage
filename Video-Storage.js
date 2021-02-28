@@ -1,6 +1,17 @@
 const defaultSettings = {
 	chunkSize: 52428800, //50mb
-	debug: false
+	debug: false,
+	onready: null
+}
+
+const cobj = {
+	total:null,
+	loaded:0,
+	segments:0,
+	totalSegments:null,
+	isFirst:true,
+	done:false,
+	name:null
 }
 
 class VS {
@@ -27,19 +38,15 @@ class VS {
 					setVersion.onsuccess = () => { createObjectStore(this.db) }
 				}
 			}
+			if(this.conf.onready) this.conf.onready()
 		}
 
 		this.conf = settings
 
 		this.onprogress = null
+		this.onready = null
 
-		this.c = {
-			total:null,
-			loaded:0,
-			segments:null,
-			totalSegments:null,
-			isFirst:true
-		}
+		this.c = Object.assign({}, cobj)
 	}
 
 	/**
@@ -67,7 +74,7 @@ class VS {
 		}
 	}
 
-	_doReq(url,callback) {
+	_doReq(url, onDone) {
 		const xhr = new XMLHttpRequest;
 		xhr.responseType = "blob"
 		xhr.open("GET", url, true)
@@ -77,21 +84,60 @@ class VS {
 			if(xhr.readyState != 4) return
 		}
 
-		xhr.onload = (event) => {
+		xhr.onload = () => {
 			this.c.loaded += this.conf.chunkSize
 			if(this.c.isFirst) {
 				this.c.total = Number(xhr.getResponseHeader("Content-Range").split("/")[1])
-				console.log(this.c.total)
+				this.c.totalSegments = Math.ceil(this.c.total / this.conf.chunkSize)
 				this.c.isFirst = false
 			}
 
 			if(this.onprogress) this.onprogress()
 			if(this.conf.debug) console.log(`% loaded ${(t.c.loaded / t.c.total * 100).toFixed(2)}`)
-			
-			if(this.c.loaded < this.c.total) this._doReq(url)
+
+			this._save(`blob_${this.c.name}_${this.c.segments}`, xhr.response, () => {
+				this.c.segments++
+				if(this.c.loaded < this.c.total) this._doReq(url,onDone)
+				else {
+					this.c.done = true
+					onDone()
+				}
+			})
 		}
 
 		xhr.send(null)
+	}
+
+	get(name) {
+		return new Promise((resolve,reject) => {
+			let tra = this.db.transaction(["Video-Storage"],"readwrite")
+			tra.objectStore("Video-Storage").get(`meta_${name}`).onsuccess = (e) => {
+				const result = e.target.result
+				if(!result) reject("not found")
+				else resolve( {
+					chunkSize: result.chunkSize,
+					total: result.total,
+					segments: result.totalSegments,
+					getUrl: () => {
+						return new Promise((resolve,reject) => {
+							let blobArray = []
+							for(let i = 0; i < result.totalSegments; i++) {
+								tra.objectStore("Video-Storage").get(`blob_${name}_${i}`).onsuccess = (e) => {
+									blobArray[i] = e.target.result
+									if(i+1 === result.totalSegments) {
+										const mediaUrl = URL.createObjectURL(new Blob(blobArray))
+										resolve(mediaUrl)
+									}
+								}
+							}
+						})
+					},
+					delete: () => {
+						
+					}
+				} )
+			}
+		})
 	}
 
 	/**
@@ -100,10 +146,15 @@ class VS {
 	 * @param {String} path the path of the origin file
 	 */
 	save(name,path) {
-		let ongoing = true
-		let failsafe = 0;
-
-		this._doReq(path)
+		this.c.name = name
+		this._doReq(path, () => {
+			if(this.conf.debug) console.log("DONE!")
+			this.c.chunkSize = this.conf.chunkSize
+			this._save(`meta_${name}`,this.c,(e) => {
+				console.log(e)
+			})
+			this.c = Object.assign({}, cobj)
+		})
 	}
 
 }

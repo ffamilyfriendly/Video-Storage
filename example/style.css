@@ -37,3 +37,13 @@
 #percent {
 	display: inline;
 }
+
+.watch-btn {
+	border: 2px solid cyan !important;
+	background-color: rgba(0, 255, 255, 0.808) !important;
+}
+
+video {
+	width: 100%;
+	height: 100vh;
+}
