@@ -8,7 +8,9 @@ Video-Storage aims to allow storage of big files in indexedDB without issues on 
 | Firefox (PC) | ✅             | Manjaro, 84.0.2 (64-bit)          |
 | Safari (IOS) | ❌             | working on fixing this            |
 
-*A browser missing from compat list? Make a fork and commit your result on that browser*
+*A browser missing from compat list? Make a pull request!*
+
+## how to import
 
 ## example
 ```js
