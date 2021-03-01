@@ -11,7 +11,8 @@ const cobj = {
 	totalSegments:null,
 	isFirst:true,
 	done:false,
-	name:null
+	name:null,
+	type:""
 }
 
 class VS {
@@ -99,6 +100,7 @@ class VS {
 				this.c.total = Number(xhr.getResponseHeader("Content-Range").split("/")[1])
 				this.c.totalSegments = Math.ceil(this.c.total / this.conf.chunkSize)
 				this.c.isFirst = false
+				this.c.type = xhr.response.type
 			}
 
 			this.c.loaded += xhr.response.size
@@ -139,7 +141,7 @@ class VS {
 									tra.objectStore("Video-Storage").get(`blob_${name}_${i}`).onsuccess = (e) => {
 										blobArray.push(e.target.result)
 										if(i+1 === result.totalSegments) {
-											resolve(new Blob(blobArray,{ type:blobArray[0].type }))
+											resolve(new Blob(blobArray,{ type:result.type }))
 										}
 									}
 								}
@@ -157,7 +159,7 @@ class VS {
 						},
 						getUrl: async () => {
 							const blobs = await returnObj.getBlobs()
-							return URL.createObjectURL(blobs)
+							return { url: URL.createObjectURL(blobs), type:blobs.type}
 						}
 					}
 					resolve( returnObj )

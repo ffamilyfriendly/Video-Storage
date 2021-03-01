@@ -27,7 +27,10 @@ const doDownload = () => {
 const watch = async () => {
 	vid.setAttribute("controls","true")
 	vid.setAttribute("preload","")
-	vid.src = await getObjectUrl()
+	const resp = await getObjectUrl()
+	vid.src = resp.url
+	console.log(resp)
+	vid.setAttribute("type",resp.type)
 	document.querySelector("body").prepend(vid)
 
 	const btn = document.getElementById("buttonThing")
