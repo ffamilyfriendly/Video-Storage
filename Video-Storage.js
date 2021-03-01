@@ -173,13 +173,14 @@ class VS {
 	 * @param {String} name the name of the file
 	 * @param {String} path the path of the origin file
 	 */
-	save(name,path) {
+	save(name,path,callback) {
 		this.c.name = name
 		this._doReq(path, () => {
 			if(this.conf.debug) console.log("DONE!")
 			this.c.chunkSize = this.conf.chunkSize
 			this._save(`meta_${name}`,this.c,(e) => {
 				console.log(e)
+				if(callback) callback()
 			})
 			this.c = Object.assign({}, cobj)
 		})
