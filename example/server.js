@@ -1,7 +1,7 @@
 const express = require("express"),
 	server = express(),
 	path = require("path"),
-	filePath = "/home/jonathan/Downloads/testHP.mp3"
+	filePath = "/home/jonathan/Downloads/v2.mp4"
 
 server.get("/", (req,res) => {
 	console.log("got request for example.html")

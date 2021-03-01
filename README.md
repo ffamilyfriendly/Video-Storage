@@ -46,3 +46,4 @@ FileManager.get("Video-name")
 ## Issues
 ### Firefox-playback
 Currently firefox files that are comprised of more then one chunk are unseekable when used as a source. I have no clue why this is, it works when the object url is directly placed in adress bar
+** might just be playbacking mp3 files that arent supported
