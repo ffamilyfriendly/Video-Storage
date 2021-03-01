@@ -16,13 +16,33 @@ Video-Storage aims to allow storage of big files in indexedDB without issues on 
 ### Preferably 
 download the file to your project then import it via
 ```html 
-<script src="/your/path/Video-Storage.js">
+<script src="https://unpkg.com/video-storage@latest/Video-Storage.js">
 ```
 ### Or if you are lazy
 import it as such
 ```html
 <script src="https://familyfriendly.xyz/lib/Video-Storage.js">
 ```
+
+## docs
+### VS
+base class. Takes config object in constructor parameter. You can get the default config object with **VS**.getDefaultConfig()
+### VS.save(name,path,?callback)
+**name:** string
+**path:** string
+**callback (optional):** function
+retrieves the file from path in partials and saves it as **name**. Callback is ran when all data is saved
+
+### VS.get(name)
+**name:** string
+returns object:
+	chunksize: number, total: number, segments: number, getBlobs(): promise, getBlob(n): promise, getUrl(): promise
+
+	n in getBlob defines what segment to get
+
+### VS.delete(name)
+**name:** string
+removes file with **name**
 
 ## example
 ```js
