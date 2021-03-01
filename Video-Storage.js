@@ -108,7 +108,7 @@ class VS {
 			if(this.onprogress) this.onprogress()
 			if(this.conf.debug) console.log(`% loaded ${(t.c.loaded / t.c.total * 100).toFixed(2)}`)
 
-			this._save(`blob_${this.c.name}_${this.c.segments}`, xhr.response, () => {
+			this._save(`blob_${this.c.name}_${this.c.segments}`, new Blob([xhr.response]), () => {
 				this.c.segments++
 				if(this.c.loaded < this.c.total) this._doReq(url,onDone)
 				else {
@@ -137,9 +137,9 @@ class VS {
 								let blobArray = []
 								for(let i = 0; i < result.totalSegments; i++) {
 									tra.objectStore("Video-Storage").get(`blob_${name}_${i}`).onsuccess = (e) => {
-										blobArray[i] = e.target.result
+										blobArray.push(e.target.result)
 										if(i+1 === result.totalSegments) {
-											resolve(new Blob(blobArray,{ type:e.target.result.type }))
+											resolve(new Blob(blobArray,{ type:blobArray[0].type }))
 										}
 									}
 								}

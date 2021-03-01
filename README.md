@@ -5,7 +5,7 @@ Video-Storage aims to allow storage of big files in indexedDB without issues on 
 | Browser      | Compatibility | Notes                             |
 |--------------|---------------|-----------------------------------|
 | Chrome (PC)  | ✅             | Manjaro, 89.0.4385.0 dev (64-bit) |
-| Firefox (PC) | [❌*](#Firefox-playback)             | Manjaro, 84.0.2 (64-bit) - faulty          |
+| Firefox (PC) | [⚠️*](#Firefox-playback)             | Manjaro, 84.0.2 (64-bit) - Limited          |
 | Safari (IOS) | ❌             | working on fixing this            |
 
 *A browser missing from compat list? Make a pull request!*
@@ -45,4 +45,4 @@ FileManager.get("Video-name")
 
 ## Issues
 ### Firefox-playback
-After some debugging ~~with some I mean like 7 hours~~ I've got it through my thick skull that the issued lie with my code not firefox
+Currently firefox files that are comprised of more then one chunk are unseekable when used as a source. I have no clue why this is, it works when the object url is directly placed in adress bar

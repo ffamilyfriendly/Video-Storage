@@ -1,7 +1,7 @@
 let vid = document.createElement("video")
 const conf = VS.getDefaultConfig()
 conf.debug = true
-conf.chunkSize = 524288000
+conf.chunkSize = 209715200
 conf.onready = () => {
 	t.get("test")
 	.then(() => {
