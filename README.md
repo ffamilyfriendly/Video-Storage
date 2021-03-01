@@ -31,17 +31,20 @@ base class. Takes config object in constructor parameter. You can get the defaul
 **name:** string
 **path:** string
 **callback (optional):** function
+
 retrieves the file from path in partials and saves it as **name**. Callback is ran when all data is saved
 
 ### VS.get(name)
 **name:** string
-returns object:
-	chunksize: number, total: number, segments: number, getBlobs(): promise, getBlob(n): promise, getUrl(): promise
 
+returns object:
+
+	chunksize: number, total: number, segments: number, getBlobs(): promise, getBlob(n): promise, getUrl(): promise
 	n in getBlob defines what segment to get
 
 ### VS.delete(name)
 **name:** string
+
 removes file with **name**
 
 ## example
