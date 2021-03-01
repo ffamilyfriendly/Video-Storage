@@ -5,7 +5,7 @@ Video-Storage aims to allow storage of big files in indexedDB without issues on 
 | Browser      | Compatibility | Notes                             |
 |--------------|---------------|-----------------------------------|
 | Chrome (PC)  | ✅             | Manjaro, 89.0.4385.0 dev (64-bit) |
-| Firefox (PC) | [⚠️*](#Firefox-playback)             | Manjaro, 84.0.2 (64-bit) - Limited          |
+| Firefox (PC) | [✅*](#Firefox-playback)             | Manjaro, 84.0.2 (64-bit) - check note          |
 | Safari (PC) | ✅             | 14.0.3 (16610.4.3.1.4)            |
 | Safari (IOS) | ✅             | iOS 14.4            |
 
@@ -46,5 +46,9 @@ FileManager.get("Video-name")
 
 ## Issues
 ### Firefox-playback
-Currently firefox files that are comprised of more then one chunk are unseekable when used as a source. I have no clue why this is, it works when the object url is directly placed in adress bar
-** might just be playbacking mp3 files that arent supported
+Currently firefox files that are comprised of more then one chunk are unseekable when used as a source. I have no clue why this is, it works when the object url is directly placed in adress bar. However this can be "solved" via a lazy workaround which I include in this code
+```js
+	vid = document.querySelector("video")
+	if(VS.isFirefox()) VS.lazyLoad(vid, () => {done()})
+```
+what this does is it constantly seeks the video until it is fully buffered. This might take a few minutes depending on media length

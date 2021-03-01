@@ -211,3 +211,28 @@ class VS {
 }
 
 VS.getDefaultConfig = () => { return Object.assign({}, defaultSettings) }
+
+VS.isFirefox = () => {
+	return navigator.userAgent.search("Firefox") > -1
+}
+
+const doSeek = (mediaElement) => {
+	if(!mediaElement.duration) return
+	console.log("set")
+	mediaElement.currentTime = mediaElement.duration
+}
+
+/**
+ * @description I am sorry for this code. It's a disgrace but itworks™
+ * @param {HTMLMediaElement} mediaElement 
+ */
+VS.lazyLoad = (mediaElement,callback) => {
+	const loadInterval = setInterval(() => {
+		doSeek(mediaElement)
+		if(mediaElement.duration - mediaElement.currentTime < 10) {
+			clearInterval(loadInterval)			
+			mediaElement.currentTime = 1
+			callback ? callback() : null
+		}
+	},1000)
+}

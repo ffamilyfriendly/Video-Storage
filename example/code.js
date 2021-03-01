@@ -33,19 +33,17 @@ const watch = async () => {
 	vid.setAttribute("type",resp.type)
 	document.querySelector("body").prepend(vid)
 
+	if(VS.isFirefox()) VS.lazyLoad(vid)
+
 	const btn = document.getElementById("buttonThing")
 	btn.innerText = "remove file"
 	btn.classList = "remove-btn"
 	btn.onclick = removeFile
 }
 
-vid.onprogress = (e) => {
-	console.log(e)
-}
-
 const TEST = () => {
 	console.log(vid.duration)
-	vid.currentSrc = vid.duration/2
+	vid.currentTime = vid.duration/2
 }
 
 const removeFile = () => {
