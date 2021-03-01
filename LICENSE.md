@@ -12,7 +12,7 @@
 
   0. You just DO WHAT THE FUCK YOU WANT TO.
 
-Copyright © 2021 Jonathan Hermin <me@familyfriendly.xyz>
+Copyright © 2021 familyfriendly <me@familyfriendly.xyz>
 This work is free. You can redistribute it and/or modify it under the
 terms of the Do What The Fuck You Want To Public License, Version 2,
 as published by Sam Hocevar. See above for more details.
