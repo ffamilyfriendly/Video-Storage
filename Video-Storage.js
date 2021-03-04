@@ -1,7 +1,8 @@
 const defaultSettings = {
 	chunkSize: 52428800, //50mb
 	debug: false,
-	onready: null
+	onready: null,
+	dbVersion:4
 }
 
 const cobj = {
@@ -34,8 +35,8 @@ class VS {
 			this.db = this.req.result
 			this.db.onerror = (err) => { console.error("[Video-Js] ", err) }
 			if(this.db.setVersion) {
-				if(this.db.version != dbVersion) {
-					const setVersion = this.db.setVersion(dbVersion)
+				if(this.db.version != this.conf.dbVersion) {
+					const setVersion = this.db.setVersion(this.conf.dbVersion)
 					setVersion.onsuccess = () => { createObjectStore(this.db) }
 				}
 			}
@@ -108,7 +109,7 @@ class VS {
 			if(this.conf.debug) console.log(logObj)
 
 			if(this.onprogress) this.onprogress()
-			if(this.conf.debug) console.log(`% loaded ${(t.c.loaded / t.c.total * 100).toFixed(2)}`)
+			if(this.conf.debug) console.log(`% loaded ${(this.c.loaded / this.c.total * 100).toFixed(2)}`)
 
 			this._save(`blob_${this.c.name}_${this.c.segments}`, new Blob([xhr.response]), () => {
 				this.c.segments++
@@ -237,3 +238,6 @@ VS.lazyLoad = (mediaElement,callback) => {
 		}
 	},1000)
 }
+
+// ES6 export
+export default VS;

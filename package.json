@@ -1,6 +1,6 @@
 {
   "name": "video-storage",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A front-end library that enables easy storage and retrieval of big files into indexedDB without crashes and with efficient RAM usage",
   "main": "Video-Storage.js",
   "directories": {
